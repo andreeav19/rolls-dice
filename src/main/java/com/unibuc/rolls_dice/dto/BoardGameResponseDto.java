@@ -16,5 +16,5 @@ public class BoardGameResponseDto {
     private Float ratingScore;
     private String description;
     private String rulesLink;
-    private List<CategoryResponseDto> categoryList;
+    private List<String> categoryList;
 }

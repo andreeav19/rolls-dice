@@ -2,6 +2,7 @@ package com.unibuc.rolls_dice.service;
 
 import com.unibuc.rolls_dice.dto.BoardGameResponseDto;
 import com.unibuc.rolls_dice.dto.CategoryResponseDto;
+import com.unibuc.rolls_dice.entity.Category;
 import com.unibuc.rolls_dice.repository.BoardGameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,7 @@ public class BoardGameServiceImpl implements BoardGameService {
                         boardGame.getDescription(),
                         boardGame.getRulesLink(),
                         boardGame.getCategoryList().stream()
-                                .map(category -> new CategoryResponseDto(
-                                        category.getName()
-                                ))
+                                .map(Category::getName)
                                 .collect(Collectors.toList())
                         )
                 )
