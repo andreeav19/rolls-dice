@@ -32,3 +32,76 @@ FROM (VALUES
      ) AS new_data(user_id, email, username, password, first_name, last_name)
 WHERE NOT EXISTS(SELECT 1 FROM rolls_dice_user LIMIT 1);
 
+INSERT INTO category (name)
+SELECT *
+FROM (VALUES
+          ('Strategy'),
+          ('Card Games'),
+          ('Cooperative'),
+          ('Family Games'),
+          ('Party Games'),
+          ('Abstract Games'),
+          ('Role-Playing Games'),
+          ('Miniature Games'),
+          ('Deck-Building Games'),
+          ('Educational'),
+          ('Nature')
+      ) AS new_data(name)
+WHERE NOT EXISTS(SELECT 1 FROM category LIMIT 1);
+
+INSERT INTO board_game_category (board_game_id, category_id)
+SELECT *
+FROM (VALUES
+          (1, 1),
+          (1, 2),
+          (1, 4),
+          (1, 11),
+          (2, 1),
+          (2, 4),
+          (2, 6),
+          (2, 8),
+          (3, 1),
+          (3, 6),
+          (3, 10),
+          (3, 4),
+          (4, 1),
+          (4, 4),
+          (4, 6),
+          (5, 1),
+          (5, 4),
+          (5, 6),
+          (6, 1),
+          (6, 3),
+          (6, 4),
+          (6, 8),
+          (7, 1),
+          (7, 2),
+          (7, 6),
+          (7, 9),
+          (8, 1),
+          (8, 6),
+          (8, 4),
+          (9, 1),
+          (9, 9),
+          (9, 2),
+          (10, 1),
+          (10, 6),
+          (10, 8),
+          (11, 1),
+          (11, 2),
+          (11, 6),
+          (12, 1),
+          (12, 3),
+          (12, 7),
+          (12, 8),
+          (13, 1),
+          (13, 2),
+          (13, 6),
+          (14, 1),
+          (14, 2),
+          (14, 5),
+          (15, 1),
+          (15, 6),
+          (15, 5)
+      ) AS new_data(board_game_id, category_id)
+WHERE NOT EXISTS(SELECT 1 FROM board_game_category LIMIT 1);
