@@ -16,9 +16,13 @@ import java.util.UUID;
 @Entity
 public class RollsDiceUser {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
