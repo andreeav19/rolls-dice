@@ -9,28 +9,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/clubs")
 @RequiredArgsConstructor
-public class RollsDiceUserController {
+public class ClubController {
     private final ClubService clubService;
 
-    @PostMapping("{username}/add-club")
-    public ResponseEntity<Long> addClub(@PathVariable String username, @RequestBody @Valid ClubRequestDto requestDto) {
-        Long response = clubService.addClub(username, requestDto);
+    @PostMapping()
+    public ResponseEntity<Long> addClub(@RequestBody @Valid ClubRequestDto requestDto) {
+        Long response = clubService.addClub(requestDto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
-    @PutMapping("{username}/edit-club/{clubId}")
+    @PutMapping("/{clubId}")
     @ResponseStatus(HttpStatus.OK)
-    public void editClub(@PathVariable String username, @PathVariable Long clubId,
+    public void editClub(@PathVariable Long clubId,
                          @RequestBody @Valid ClubRequestDto requestDto) {
-        clubService.editClub(username, clubId, requestDto);
+        clubService.editClub(clubId, requestDto);
     }
 
-    @PostMapping("{username}/join-club/{clubId}")
+    @PostMapping("{username}/join/{clubId}")
     @ResponseStatus(HttpStatus.OK)
     public void addUserToClubMembers(@PathVariable String username, @PathVariable Long clubId) {
         clubService.addUserToClubMembers(username, clubId);

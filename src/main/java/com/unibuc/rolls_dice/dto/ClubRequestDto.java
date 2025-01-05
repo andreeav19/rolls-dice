@@ -13,6 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubRequestDto {
+    @NotNull(message = "Username must not be null.")
+    private String username;
+
     @NotNull
     @Size(min = 1, message = "Club name must contain at least 1 character.")
     private String name;

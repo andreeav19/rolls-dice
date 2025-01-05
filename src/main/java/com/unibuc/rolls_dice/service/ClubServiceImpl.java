@@ -18,8 +18,8 @@ public class ClubServiceImpl implements ClubService {
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final DatabaseLookup databaseLookup;
 
-    public Long addClub(String username, ClubRequestDto clubRequestDto) {
-        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+    public Long addClub(ClubRequestDto clubRequestDto) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(clubRequestDto.getUsername());
 
         Club club = new Club();
         club.setName(clubRequestDto.getName());
@@ -36,8 +36,8 @@ public class ClubServiceImpl implements ClubService {
         return club.getClubId();
     }
 
-    public void editClub(String username, Long clubId, ClubRequestDto clubRequestDto) {
-        databaseLookup.retrieveUserByUsername(username);
+    public void editClub(Long clubId, ClubRequestDto clubRequestDto) {
+        databaseLookup.retrieveUserByUsername(clubRequestDto.getUsername());
         Club club = databaseLookup.retrieveClubById(clubId);
 
         long membersCount = club.getUserList().size();
