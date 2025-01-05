@@ -23,4 +23,11 @@ public class RollsDiceUserController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+
+    @PutMapping("{username}/edit-club/{clubId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void editClub(@PathVariable String username, @PathVariable Long clubId,
+                         @RequestBody @Valid ClubRequestDto requestDto) {
+        clubService.editClub(username, clubId, requestDto);
+    }
 }

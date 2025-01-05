@@ -35,4 +35,14 @@ public class ClubServiceImpl implements ClubService {
 
         return club.getClubId();
     }
+
+    public void editClub(String username, Long clubId, ClubRequestDto clubRequestDto) {
+        databaseLookup.retrieveUserByUsername(username);
+        Club club = databaseLookup.retrieveClubById(clubId);
+
+        club.setName(clubRequestDto.getName());
+        club.setDescription(clubRequestDto.getDescription());
+        club.setMaxMembers(clubRequestDto.getMaxMembers());
+        clubRepository.save(club);
+    }
 }
