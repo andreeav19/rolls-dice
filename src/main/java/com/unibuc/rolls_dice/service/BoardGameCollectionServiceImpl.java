@@ -7,10 +7,12 @@ import com.unibuc.rolls_dice.entity.BoardGameCollection;
 import com.unibuc.rolls_dice.entity.RollsDiceUser;
 import com.unibuc.rolls_dice.entity.key.BoardGameCollectionId;
 import com.unibuc.rolls_dice.repository.BoardGameCollectionRepository;
+import com.unibuc.rolls_dice.repository.BoardGameRepository;
 import com.unibuc.rolls_dice.type.CollectionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class BoardGameCollectionServiceImpl implements BoardGameCollectionService {
     private final BoardGameCollectionRepository boardGameCollectionRepository;
     private final DatabaseLookup databaseLookup;
+    private final BoardGameRepository boardGameRepository;
 
     private void setCollectionType(BoardGameCollection collection, CollectionType collectionType) {
         switch (collectionType) {
@@ -29,6 +32,17 @@ public class BoardGameCollectionServiceImpl implements BoardGameCollectionServic
             case RECOMMEND -> collection.setRecommend(true);
             default -> {}
         }
+    }
+
+    private float recalculateBoardGameRating(Long boardGameId) {
+        List<BoardGameCollection> collections =
+                boardGameCollectionRepository.findAllByBoardGame_BoardGameId(boardGameId);
+        long boardGameCount = collections.size();
+        double scoreSum = collections.stream()
+                .mapToDouble(BoardGameCollection::getRatingScore)
+                .sum();
+
+        return (float) (scoreSum / boardGameCount);
     }
 
     private BoardGameCollection retrieveOrCreateBoardGameCollection(RollsDiceUser user, BoardGame boardGame) {
@@ -70,5 +84,9 @@ public class BoardGameCollectionServiceImpl implements BoardGameCollectionServic
         boardGameCollection.setRatingScore(ratingRequestDto.getRatingScore());
         boardGameCollection.setRatingDescription(ratingRequestDto.getRatingDescription());
         boardGameCollectionRepository.save(boardGameCollection);
+
+        float ratingScore = recalculateBoardGameRating(boardGameId);
+        boardGame.setRatingScore(ratingScore);
+        boardGameRepository.save(boardGame);
     }
 }
