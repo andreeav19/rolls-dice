@@ -24,7 +24,7 @@ public class BoardGameCollection {
     @JoinColumn(name = "board_game")
     private BoardGame boardGame;
 
-    private Integer ratingScore;
+    private Float ratingScore;
     private String ratingDescription;
 
     @Column(nullable = false)
