@@ -10,4 +10,5 @@ public interface ClubService {
     void editClub(Long clubId, ClubRequestDto clubRequestDto);
     void addUserToClubMembers(String username, Long clubId);
     List<ClubResponseDto> getClubsByName(String clubName);
+    List<ClubResponseDto> getClubsByCategories(List<Integer> categories);
 }

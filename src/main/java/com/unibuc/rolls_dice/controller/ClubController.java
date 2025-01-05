@@ -26,6 +26,15 @@ public class ClubController {
                 .body(response);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<ClubResponseDto>> getClubsByCategories(@RequestParam List<Integer> categories) {
+        List<ClubResponseDto> response = clubService.getClubsByCategories(categories);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
     @PostMapping()
     public ResponseEntity<Long> addClub(@RequestBody @Valid ClubRequestDto requestDto) {
         Long response = clubService.addClub(requestDto);

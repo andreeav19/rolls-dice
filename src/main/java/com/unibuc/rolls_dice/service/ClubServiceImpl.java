@@ -22,8 +22,8 @@ public class ClubServiceImpl implements ClubService {
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final DatabaseLookup databaseLookup;
 
-    public List<ClubResponseDto> getClubsByName(String clubName) {
-        return clubRepository.getClubsByNameContainingIgnoreCase(clubName)
+    private List<ClubResponseDto> mapClubsToDtoList(List<Club> clubs) {
+        return clubs
                 .stream()
                 .map(club -> {
                     return new ClubResponseDto(
@@ -33,22 +33,32 @@ public class ClubServiceImpl implements ClubService {
                             club.getLeader().getUsername(),
                             club.getMaxMembers(),
                             club.getBoardGame() != null ?
-                                new BoardGameResponseDto(
-                                        club.getBoardGame().getName(),
-                                        club.getBoardGame().getRatingScore(),
-                                        club.getBoardGame().getDescription(),
-                                        club.getBoardGame().getRulesLink(),
-                                        club.getBoardGame().getCategoryList().stream()
-                                                .map(Category::getName)
-                                                .toList()
-                                )
-                                : null,
+                                    new BoardGameResponseDto(
+                                            club.getBoardGame().getName(),
+                                            club.getBoardGame().getRatingScore(),
+                                            club.getBoardGame().getDescription(),
+                                            club.getBoardGame().getRulesLink(),
+                                            club.getBoardGame().getCategoryList().stream()
+                                                    .map(Category::getName)
+                                                    .toList()
+                                    )
+                                    : null,
                             club.getUserList().stream()
                                     .map(RollsDiceUser::getUsername)
                                     .toList()
                     );
                 })
                 .toList();
+    }
+
+    public List<ClubResponseDto> getClubsByName(String clubName) {
+        List<Club> clubs = clubRepository.findClubsByNameContainingIgnoreCase(clubName);
+        return mapClubsToDtoList(clubs);
+    }
+
+    public List<ClubResponseDto> getClubsByCategories(List<Integer> categories) {
+        List<Club> clubs = clubRepository.findClubsByBoardGame_CategoryList_CategoryIdIn(categories);
+        return mapClubsToDtoList(clubs);
     }
 
     public Long addClub(ClubRequestDto clubRequestDto) {
