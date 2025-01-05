@@ -24,9 +24,30 @@ public class BoardGameCollection {
     @JoinColumn(name = "board_game")
     private BoardGame boardGame;
 
-    private Integer ratingScore;
+    private Float ratingScore;
     private String ratingDescription;
+
+    @Column(nullable = false)
     private Boolean wantToBuy;
+
+    @Column(nullable = false)
     private Boolean own;
+
+    @Column(nullable = false)
     private Boolean recommend;
+
+    @PrePersist
+    private void ensureCollectionTypeDefaults() {
+        if (wantToBuy == null) {
+            wantToBuy = false;
+        }
+
+        if (own == null) {
+            own = false;
+        }
+
+        if (recommend == null) {
+            recommend = false;
+        }
+    }
 }

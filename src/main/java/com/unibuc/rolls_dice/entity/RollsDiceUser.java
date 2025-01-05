@@ -16,9 +16,13 @@ import java.util.UUID;
 @Entity
 public class RollsDiceUser {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -33,8 +37,8 @@ public class RollsDiceUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BoardGameCollection> boardGameCollectionList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Club> clubList;
+    @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
+    private List<Club> ledClubList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> postList;
@@ -53,4 +57,11 @@ public class RollsDiceUser {
     )
     private List<Event> attendedEventList;
 
+    @ManyToMany
+    @JoinTable(
+            name = "joins",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
+    private List<Club> joinedClubList;
 }
