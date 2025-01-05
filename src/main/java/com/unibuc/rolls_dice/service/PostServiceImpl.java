@@ -25,13 +25,7 @@ public class PostServiceImpl implements PostService{
     public Long addPostToClub(Long clubId, PostRequestDto postRequestDto) {
         Club club = databaseLookup.retrieveClubById(clubId);
         RollsDiceUser user = databaseLookup.retrieveUserByUsername(postRequestDto.getUsername());
-
-        boolean userExists = club.getUserList().stream()
-                .anyMatch(existingUser -> existingUser.getUserId().equals(user.getUserId()));
-        if (!userExists) {
-            throw new IllegalStateException("User " + user.getUsername()
-                    + " is not a member of the club with the id " + clubId);
-        }
+        databaseLookup.checkUserIsMemberOfClub(user, club);
 
         Post post = new Post();
         post.setClub(club);
