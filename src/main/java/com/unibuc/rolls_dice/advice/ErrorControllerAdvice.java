@@ -44,4 +44,11 @@ public class ErrorControllerAdvice {
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Invalid value for collection type.");
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalStateException(IllegalStateException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 }

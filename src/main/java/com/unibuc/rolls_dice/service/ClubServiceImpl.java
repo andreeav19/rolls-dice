@@ -40,9 +40,38 @@ public class ClubServiceImpl implements ClubService {
         databaseLookup.retrieveUserByUsername(username);
         Club club = databaseLookup.retrieveClubById(clubId);
 
+        long membersCount = club.getUserList().size();
+        if (clubRequestDto.getMaxMembers() < membersCount) {
+            throw new IllegalStateException("Maximum limit for members from club with id " + clubId +
+                    " should be equal to or greater than the number of existing members: " + membersCount + ".");
+        }
+
         club.setName(clubRequestDto.getName());
         club.setDescription(clubRequestDto.getDescription());
         club.setMaxMembers(clubRequestDto.getMaxMembers());
         clubRepository.save(club);
+    }
+
+    public void addUserToClubMembers(String username, Long clubId) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+        Club club = databaseLookup.retrieveClubById(clubId);
+
+        if (club.getMaxMembers() != null) {
+            long membersCount = club.getUserList().size();
+            if (membersCount == club.getMaxMembers()) {
+                throw new IllegalStateException("Maximum limit for members from club with id " + clubId + " exceeded.");
+            }
+            boolean userExists = club.getUserList().stream()
+                    .anyMatch(existingUser -> existingUser.getUserId().equals(user.getUserId()));
+            if (userExists) {
+                return;
+            }
+        }
+
+        club.getUserList().add(user);
+        clubRepository.save(club);
+
+        user.getJoinedClubList().add(club);
+        rollsDiceUserRepository.save(user);
     }
 }

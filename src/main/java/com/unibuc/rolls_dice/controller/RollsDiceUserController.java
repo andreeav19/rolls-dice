@@ -5,7 +5,6 @@ import com.unibuc.rolls_dice.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +28,11 @@ public class RollsDiceUserController {
     public void editClub(@PathVariable String username, @PathVariable Long clubId,
                          @RequestBody @Valid ClubRequestDto requestDto) {
         clubService.editClub(username, clubId, requestDto);
+    }
+
+    @PostMapping("{username}/join-club/{clubId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addUserToClubMembers(@PathVariable String username, @PathVariable Long clubId) {
+        clubService.addUserToClubMembers(username, clubId);
     }
 }
