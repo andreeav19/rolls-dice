@@ -26,7 +26,28 @@ public class BoardGameCollection {
 
     private Integer ratingScore;
     private String ratingDescription;
+
+    @Column(nullable = false)
     private Boolean wantToBuy;
+
+    @Column(nullable = false)
     private Boolean own;
+
+    @Column(nullable = false)
     private Boolean recommend;
+
+    @PrePersist
+    private void ensureCollectionTypeDefaults() {
+        if (wantToBuy == null) {
+            wantToBuy = false;
+        }
+
+        if (own == null) {
+            own = false;
+        }
+
+        if (recommend == null) {
+            recommend = false;
+        }
+    }
 }
