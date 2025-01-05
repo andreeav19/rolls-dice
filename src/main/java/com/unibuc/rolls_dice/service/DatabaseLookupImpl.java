@@ -62,4 +62,25 @@ class DatabaseLookupImpl implements DatabaseLookup {
                     + " is not a member of the club with the id " + club.getClubId());
         }
     }
+
+    public void checkUserIsLeaderOfClub(RollsDiceUser user, Club club) {
+        if (club.getLeader() != user) {
+            throw new IllegalStateException("User " + user.getUsername()
+                    + " is not the leader of the club with the id " + club.getClubId());
+        }
+    }
+
+    public void checkClubBoardGameIsNotSet(Club club) {
+        if (club.getBoardGame() != null) {
+            throw new IllegalStateException("Error Creating: Club with id " + club.getClubId()
+                    + " already has board game set.");
+        }
+    }
+
+    public void checkClubBoardGameIsSet(Club club) {
+        if (club.getBoardGame() == null) {
+            throw new IllegalStateException("Error Updating: Club with id " + club.getClubId()
+                    + " does not have board game set.");
+        }
+    }
 }

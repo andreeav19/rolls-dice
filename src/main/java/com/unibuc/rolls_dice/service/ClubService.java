@@ -11,4 +11,6 @@ public interface ClubService {
     void addUserToClubMembers(String username, Long clubId);
     List<ClubResponseDto> getClubsByName(String clubName);
     List<ClubResponseDto> getClubsByCategories(List<Integer> categories);
+    void addBoardGameToClub(String username, Long clubId, Long boardGameId);
+    void editClubBoardGame(String username, Long clubId, Long boardGameId);
 }

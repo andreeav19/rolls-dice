@@ -3,9 +3,11 @@ package com.unibuc.rolls_dice.service;
 import com.unibuc.rolls_dice.dto.BoardGameResponseDto;
 import com.unibuc.rolls_dice.dto.ClubRequestDto;
 import com.unibuc.rolls_dice.dto.ClubResponseDto;
+import com.unibuc.rolls_dice.entity.BoardGame;
 import com.unibuc.rolls_dice.entity.Category;
 import com.unibuc.rolls_dice.entity.Club;
 import com.unibuc.rolls_dice.entity.RollsDiceUser;
+import com.unibuc.rolls_dice.repository.BoardGameRepository;
 import com.unibuc.rolls_dice.repository.ClubRepository;
 import com.unibuc.rolls_dice.repository.RollsDiceUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class ClubServiceImpl implements ClubService {
     private final ClubRepository clubRepository;
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final DatabaseLookup databaseLookup;
+    private final BoardGameRepository boardGameRepository;
 
     private List<ClubResponseDto> mapClubsToDtoList(List<Club> clubs) {
         return clubs
@@ -77,6 +80,45 @@ public class ClubServiceImpl implements ClubService {
         rollsDiceUserRepository.save(user);
 
         return club.getClubId();
+    }
+
+    public void addBoardGameToClub(String username, Long clubId, Long boardGameId) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+        Club club = databaseLookup.retrieveClubById(clubId);
+        BoardGame boardGame = databaseLookup.retrieveBoardGameById(boardGameId);
+
+        databaseLookup.checkUserIsLeaderOfClub(user, club);
+        databaseLookup.checkClubBoardGameIsNotSet(club);
+
+        club.setBoardGame(boardGame);
+        clubRepository.save(club);
+
+        if (boardGame.getClubList() == null) {
+            boardGame.setClubList(new ArrayList<>(List.of(club)));
+        } else {
+            boardGame.getClubList().add(club);
+        }
+        boardGameRepository.save(boardGame);
+    }
+
+    public void editClubBoardGame(String username, Long clubId, Long boardGameId) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+        Club club = databaseLookup.retrieveClubById(clubId);
+        BoardGame boardGame = databaseLookup.retrieveBoardGameById(boardGameId);
+
+        databaseLookup.checkUserIsLeaderOfClub(user, club);
+        databaseLookup.checkClubBoardGameIsSet(club);
+
+        club.setBoardGame(boardGame);
+        clubRepository.save(club);
+
+        boardGame.getClubList().removeIf(existingClub -> existingClub.getClubId().equals(club.getClubId()));
+        if (boardGame.getClubList() == null) {
+            boardGame.setClubList(new ArrayList<>(List.of(club)));
+        } else {
+            boardGame.getClubList().add(club);
+        }
+        boardGameRepository.save(boardGame);
     }
 
     public void editClub(Long clubId, ClubRequestDto clubRequestDto) {
