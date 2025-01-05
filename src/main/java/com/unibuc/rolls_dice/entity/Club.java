@@ -28,7 +28,7 @@ public class Club {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private RollsDiceUser user;
+    private RollsDiceUser leader;
 
     @ManyToOne
     @JoinColumn(name = "board_game_id")
@@ -40,4 +40,7 @@ public class Club {
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<Event> eventList;
+
+    @ManyToMany(mappedBy = "joinedClubList")
+    private List<RollsDiceUser> userList;
 }

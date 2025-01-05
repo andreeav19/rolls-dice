@@ -37,8 +37,8 @@ public class RollsDiceUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BoardGameCollection> boardGameCollectionList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Club> clubList;
+    @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL)
+    private List<Club> ledClubList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> postList;
@@ -57,4 +57,11 @@ public class RollsDiceUser {
     )
     private List<Event> attendedEventList;
 
+    @ManyToMany
+    @JoinTable(
+            name = "joins",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
+    private List<Club> joinedClubList;
 }
