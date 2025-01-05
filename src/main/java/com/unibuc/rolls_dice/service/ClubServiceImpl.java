@@ -1,6 +1,9 @@
 package com.unibuc.rolls_dice.service;
 
+import com.unibuc.rolls_dice.dto.BoardGameResponseDto;
 import com.unibuc.rolls_dice.dto.ClubRequestDto;
+import com.unibuc.rolls_dice.dto.ClubResponseDto;
+import com.unibuc.rolls_dice.entity.Category;
 import com.unibuc.rolls_dice.entity.Club;
 import com.unibuc.rolls_dice.entity.RollsDiceUser;
 import com.unibuc.rolls_dice.repository.ClubRepository;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,35 @@ public class ClubServiceImpl implements ClubService {
     private final ClubRepository clubRepository;
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final DatabaseLookup databaseLookup;
+
+    public List<ClubResponseDto> getClubsByName(String clubName) {
+        return clubRepository.getClubsByNameContainingIgnoreCase(clubName)
+                .stream()
+                .map(club -> {
+                    return new ClubResponseDto(
+                            club.getClubId(),
+                            club.getName(),
+                            club.getDescription(),
+                            club.getLeader().getUsername(),
+                            club.getMaxMembers(),
+                            club.getBoardGame() != null ?
+                                new BoardGameResponseDto(
+                                        club.getBoardGame().getName(),
+                                        club.getBoardGame().getRatingScore(),
+                                        club.getBoardGame().getDescription(),
+                                        club.getBoardGame().getRulesLink(),
+                                        club.getBoardGame().getCategoryList().stream()
+                                                .map(Category::getName)
+                                                .toList()
+                                )
+                                : null,
+                            club.getUserList().stream()
+                                    .map(RollsDiceUser::getUsername)
+                                    .toList()
+                    );
+                })
+                .toList();
+    }
 
     public Long addClub(ClubRequestDto clubRequestDto) {
         RollsDiceUser user = databaseLookup.retrieveUserByUsername(clubRequestDto.getUsername());
