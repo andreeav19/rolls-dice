@@ -1,6 +1,5 @@
 package com.unibuc.rolls_dice.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

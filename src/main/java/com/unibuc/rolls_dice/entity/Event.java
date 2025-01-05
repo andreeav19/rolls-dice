@@ -42,7 +42,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    private RollsDiceUser user; // associated winner
+    private RollsDiceUser winner; // associated winner
 
     @ManyToMany(mappedBy = "attendedEventList")
     private List<RollsDiceUser> userList;

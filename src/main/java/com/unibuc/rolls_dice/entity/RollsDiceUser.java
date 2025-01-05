@@ -46,7 +46,7 @@ public class RollsDiceUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> commentList;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "winner", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Event> wonEventList;
 
     @ManyToMany
