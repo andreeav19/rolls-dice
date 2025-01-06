@@ -22,4 +22,10 @@ public class EventController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+
+    @PostMapping("/{username}/attend/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addUserToEventAttendees(@PathVariable String username, @PathVariable Long eventId) {
+        eventService.addUserToEventAttendees(username, eventId);
+    }
 }

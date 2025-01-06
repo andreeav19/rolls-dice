@@ -1,13 +1,7 @@
 package com.unibuc.rolls_dice.service;
 
-import com.unibuc.rolls_dice.entity.BoardGame;
-import com.unibuc.rolls_dice.entity.Club;
-import com.unibuc.rolls_dice.entity.Post;
-import com.unibuc.rolls_dice.entity.RollsDiceUser;
-import com.unibuc.rolls_dice.repository.BoardGameRepository;
-import com.unibuc.rolls_dice.repository.ClubRepository;
-import com.unibuc.rolls_dice.repository.PostRepository;
-import com.unibuc.rolls_dice.repository.RollsDiceUserRepository;
+import com.unibuc.rolls_dice.entity.*;
+import com.unibuc.rolls_dice.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +15,7 @@ class DatabaseLookupImpl implements DatabaseLookup {
     private final BoardGameRepository boardGameRepository;
     private final ClubRepository clubRepository;
     private final PostRepository postRepository;
+    private final EventRepository eventRepository;
 
     public RollsDiceUser retrieveUserByUsername(String username) {
         Optional<RollsDiceUser> userOptional = rollsDiceUserRepository.getRollsDiceUserByUsername(username);
@@ -52,6 +47,14 @@ class DatabaseLookupImpl implements DatabaseLookup {
             throw new EntityNotFoundException("Post with id " + postId + " not found.");
         }
         return postOptional.get();
+    }
+
+    public Event retrieveEventById(Long eventId) {
+        Optional<Event> eventOptional = eventRepository.findById(eventId);
+        if (eventOptional.isEmpty()) {
+            throw new EntityNotFoundException("Event with id " + eventId + " not found.");
+        }
+        return eventOptional.get();
     }
 
     public void checkUserIsMemberOfClub(RollsDiceUser user, Club club) {

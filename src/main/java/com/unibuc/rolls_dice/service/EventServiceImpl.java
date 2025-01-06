@@ -52,4 +52,31 @@ public class EventServiceImpl implements EventService {
 
         return event.getEventId();
     }
+
+    public void addUserToEventAttendees(String username, Long eventId) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+        Event event = databaseLookup.retrieveEventById(eventId);
+        databaseLookup.checkUserIsMemberOfClub(user, event.getClub());
+
+        int attendeesCount = event.getUserList().size();
+        if (event.getMaxAttendees() == attendeesCount) {
+            throw new IllegalStateException("Maximum limit for event attendees with the id " + eventId + " exceeded.");
+        }
+
+        boolean userExists = event.getUserList().stream()
+                .anyMatch(existingUser -> existingUser.getUserId().equals(user.getUserId()));
+        if (userExists) {
+            return;
+        }
+
+        event.getUserList().add(user);
+        eventRepository.save(event);
+
+        if (user.getAttendedEventList() == null) {
+            user.setAttendedEventList(new ArrayList<>(List.of(event)));
+        } else {
+            user.getAttendedEventList().add(event);
+        }
+        rollsDiceUserRepository.save(user);
+    }
 }
