@@ -1,5 +1,6 @@
 package com.unibuc.rolls_dice.dto;
 
+import com.unibuc.rolls_dice.validator.EventTime;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,7 @@ public class EventRequestDto {
     private String location;
 
     @NotNull(message = "Event time text must not be null.")
+    @EventTime
     private LocalDateTime time;
 
     @Min(value = 1, message = "Maximum number of event attendees should be greater than 0.")
