@@ -1,6 +1,7 @@
 package com.unibuc.rolls_dice.service;
 
 import com.unibuc.rolls_dice.dto.EventRequestDto;
+import com.unibuc.rolls_dice.dto.EventResponseDto;
 import com.unibuc.rolls_dice.entity.Club;
 import com.unibuc.rolls_dice.entity.Event;
 import com.unibuc.rolls_dice.entity.RollsDiceUser;
@@ -20,6 +21,26 @@ public class EventServiceImpl implements EventService {
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final ClubRepository clubRepository;
     private final DatabaseLookup databaseLookup;
+
+    public List<EventResponseDto> getEventsByClubId(Long clubId) {
+        databaseLookup.retrieveClubById(clubId);
+
+        return eventRepository.findEventsByClub_ClubId(clubId).stream()
+                .map(event -> {
+                    return new EventResponseDto(
+                            event.getEventId(),
+                            event.getName(),
+                            event.getDescription(),
+                            event.getLocation(),
+                            event.getTime(),
+                            event.getMaxAttendees(),
+                            event.getWinner() != null ? event.getWinner().getUsername() : null,
+                            event.getClub().getLeader().getUsername(),
+                            event.getUserList().stream()
+                                    .map(RollsDiceUser::getUsername).toList()
+                    );})
+                .toList();
+    }
 
     public Long addEvent(Long clubId, EventRequestDto eventRequestDto) {
         RollsDiceUser user = databaseLookup.retrieveUserByUsername(eventRequestDto.getUsername());
