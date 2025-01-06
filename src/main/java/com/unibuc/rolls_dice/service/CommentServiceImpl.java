@@ -1,6 +1,7 @@
 package com.unibuc.rolls_dice.service;
 
 import com.unibuc.rolls_dice.dto.CommentRequestDto;
+import com.unibuc.rolls_dice.dto.CommentResponseDto;
 import com.unibuc.rolls_dice.entity.Club;
 import com.unibuc.rolls_dice.entity.Comment;
 import com.unibuc.rolls_dice.entity.Post;
@@ -18,6 +19,20 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final DatabaseLookup databaseLookup;
+
+    public List<CommentResponseDto> getCommentsByPostId(Long postId) {
+        databaseLookup.retrievePostById(postId);
+
+        return commentRepository.findCommentsByPost_PostId(postId).stream()
+                .map(comment -> {
+                    return new CommentResponseDto(
+                            comment.getCommentId(),
+                            comment.getText(),
+                            comment.getUser().getUsername(),
+                            comment.getTime()
+                    );})
+                .toList();
+    }
 
     public Long addCommentToPost(Long postId, CommentRequestDto commentRequestDto) {
         Post post = databaseLookup.retrievePostById(postId);

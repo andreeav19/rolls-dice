@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService{
         return postRepository.findPostsByClub_ClubId(clubId).stream()
                 .map(post -> {
                     return new PostResponseDto(
-                             post.getClub().getClubId(),
+                            post.getPostId(),
                             post.getText(),
                             post.getUser().getUsername(),
                             post.getTime()
