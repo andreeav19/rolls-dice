@@ -57,9 +57,9 @@ public class ClubController {
         clubService.addUserToClubMembers(username, clubId);
     }
 
-    @DeleteMapping("/{clubId}")
+    @DeleteMapping("/{username}/delete/{clubId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteClubById(@PathVariable Long clubId) {
-        clubService.deleteClubById(clubId);
+    public void deleteClubById(@PathVariable Long clubId, @PathVariable String username) {
+        clubService.deleteClubById(clubId, username);
     }
 }

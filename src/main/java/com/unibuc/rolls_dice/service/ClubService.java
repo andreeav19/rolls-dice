@@ -13,5 +13,5 @@ public interface ClubService {
     List<ClubResponseDto> getClubsByCategories(List<Integer> categories);
     void addBoardGameToClub(String username, Long clubId, Long boardGameId);
     void editClubBoardGame(String username, Long clubId, Long boardGameId);
-    void deleteClubById(Long clubId);
+    void deleteClubById(Long clubId, String username);
 }

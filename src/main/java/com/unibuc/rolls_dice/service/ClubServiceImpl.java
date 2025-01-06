@@ -160,11 +160,14 @@ public class ClubServiceImpl implements ClubService {
         rollsDiceUserRepository.save(user);
     }
 
-    public void deleteClubById(Long clubId) {
+    public void deleteClubById(Long clubId, String username) {
         Club club = databaseLookup.retrieveClubById(clubId);
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+
+        databaseLookup.checkUserIsLeaderOfClub(user, club);
 
         club.getLeader().getLedClubList().remove(club);
-        club.getUserList().forEach(user -> user.getJoinedClubList().remove(club));
+        club.getUserList().forEach(existingUser -> existingUser.getJoinedClubList().remove(club));
         club.getUserList().clear();
 
         if (club.getBoardGame() != null)

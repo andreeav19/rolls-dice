@@ -10,5 +10,5 @@ public interface EventService {
     void addUserToEventAttendees(String username, Long eventId);
     void addWinnerToEvent(String username, String winnerUsername, Long eventId);
     List<EventResponseDto> getEventsByClubId(Long clubId);
-    void deleteEventById(Long eventId);
+    void deleteEventById(Long eventId, String username);
 }

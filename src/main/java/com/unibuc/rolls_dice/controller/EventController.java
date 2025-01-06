@@ -41,9 +41,9 @@ public class EventController {
         eventService.addUserToEventAttendees(username, eventId);
     }
 
-    @DeleteMapping("/{eventId}")
+    @DeleteMapping("/{username}/delete/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEventById(@PathVariable Long eventId) {
-        eventService.deleteEventById(eventId);
+    public void deleteEventById(@PathVariable Long eventId, @PathVariable String username) {
+        eventService.deleteEventById(eventId, username);
     }
 }
