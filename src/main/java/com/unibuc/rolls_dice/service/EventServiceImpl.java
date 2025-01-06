@@ -120,4 +120,15 @@ public class EventServiceImpl implements EventService {
         }
         rollsDiceUserRepository.save(winner);
     }
+
+    public void deleteEventById(Long eventId) {
+        Event event = databaseLookup.retrieveEventById(eventId);
+        event.getUserList().forEach(user -> user.getAttendedEventList().remove(event));
+        event.getUserList().clear();
+
+        if (event.getWinner() != null)
+            event.getWinner().getWonEventList().remove(event);
+
+        eventRepository.delete(event);
+    }
 }
