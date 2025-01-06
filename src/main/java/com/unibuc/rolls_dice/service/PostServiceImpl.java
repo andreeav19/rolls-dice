@@ -1,6 +1,7 @@
 package com.unibuc.rolls_dice.service;
 
 import com.unibuc.rolls_dice.dto.PostRequestDto;
+import com.unibuc.rolls_dice.dto.PostResponseDto;
 import com.unibuc.rolls_dice.entity.Club;
 import com.unibuc.rolls_dice.entity.Post;
 import com.unibuc.rolls_dice.entity.RollsDiceUser;
@@ -21,6 +22,19 @@ public class PostServiceImpl implements PostService{
     private final RollsDiceUserRepository rollsDiceUserRepository;
     private final ClubRepository clubRepository;
     private final DatabaseLookup databaseLookup;
+
+    public List<PostResponseDto> getPostsByClubId(Long clubId) {
+        databaseLookup.retrieveClubById(clubId);
+        return postRepository.findPostsByClub_ClubId(clubId).stream()
+                .map(post -> {
+                    return new PostResponseDto(
+                             post.getClub().getClubId(),
+                            post.getText(),
+                            post.getUser().getUsername(),
+                            post.getTime()
+                    );})
+                .toList();
+    }
 
     public Long addPostToClub(Long clubId, PostRequestDto postRequestDto) {
         Club club = databaseLookup.retrieveClubById(clubId);
