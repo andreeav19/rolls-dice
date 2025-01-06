@@ -66,6 +66,16 @@ class DatabaseLookupImpl implements DatabaseLookup {
         }
     }
 
+
+    public void checkUserIsAttendeeOfEvent(RollsDiceUser user, Event event) {
+        boolean userExists = event.getUserList().stream()
+                .anyMatch(existingUser -> existingUser.getUserId().equals(user.getUserId()));
+        if (!userExists) {
+            throw  new IllegalStateException("User " + user.getUsername()
+                   + " is not an attendee of the event with the id " + event.getEventId());
+        }
+    }
+
     public void checkUserIsLeaderOfClub(RollsDiceUser user, Club club) {
         if (club.getLeader() != user) {
             throw new IllegalStateException("User " + user.getUsername()
@@ -84,6 +94,13 @@ class DatabaseLookupImpl implements DatabaseLookup {
         if (club.getBoardGame() == null) {
             throw new IllegalStateException("Error Updating: Club with id " + club.getClubId()
                     + " does not have board game set.");
+        }
+    }
+
+    public void checkEventWinnerIsNotSet(Event event) {
+        if (event.getWinner() != null) {
+            throw new IllegalStateException("Error Creating: Event with id " + event.getEventId()
+                    + " already has winner set.");
         }
     }
 }

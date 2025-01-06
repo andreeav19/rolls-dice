@@ -79,4 +79,24 @@ public class EventServiceImpl implements EventService {
         }
         rollsDiceUserRepository.save(user);
     }
+
+    public void addWinnerToEvent(String username, String winnerUsername, Long eventId) {
+        RollsDiceUser user = databaseLookup.retrieveUserByUsername(username);
+        RollsDiceUser winner = databaseLookup.retrieveUserByUsername(winnerUsername);
+        Event event = databaseLookup.retrieveEventById(eventId);
+
+        databaseLookup.checkEventWinnerIsNotSet(event);
+        databaseLookup.checkUserIsLeaderOfClub(user, event.getClub());
+        databaseLookup.checkUserIsAttendeeOfEvent(winner, event);
+
+        event.setWinner(winner);
+        eventRepository.save(event);
+
+        if (winner.getWonEventList() == null) {
+            winner.setWonEventList(new ArrayList<>(List.of(event)));
+        } else {
+            winner.getWonEventList().add(event);
+        }
+        rollsDiceUserRepository.save(winner);
+    }
 }
